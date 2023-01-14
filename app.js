@@ -1,42 +1,26 @@
-const adviceID = document.getElementById("advice-id");
-const advice = document.getElementById("advice");
-
 const cardBody = document.getElementById("card");
 const dice = document.getElementById("dice");
 
-// function getAdvice() {
-//   fetch("https://api.adviceslip.com/advice")
-//   .then((response) => {
-//     return response.json();
-//   })
-// }
-//  console.log(getAdvice());
 
-//     let adviceJSON = getAdvice();
-//     const id = adviceJSON.slip.id;
-//     const advice = adviceJSON.slip.advice;
+const loader = async () => {
+  try {
+    const res = await fetch("https://api.adviceslip.com/advice");
+    if (!res.ok) {
+      throw new Error(`${res.status}: ${await res.text()}`);
+    }
+    const data = await res.json();
+    const card = `<div class="card-body">
+                  <h5>Advice #<span id="advice-id">${data.slip.id}</span></h5>
+                  <p class="advice" id="advice"><q>${data.slip.advice}</q></p>
+                  <div class="divider"><img src="images/pattern-divider-desktop.svg" alt="divider Image" /></div></div>`;
 
-//     const card = `<div class="card-body">
-//  <h5>Advice #<span id="advice-id">${id}</span></h5>
-//  <p class="advice" id="advice"><q>${advice}</q></p>
-//  <div class="divider"><img src="images/pattern-divider-desktop.svg" alt="divider Image" /></div>
-// </div>`;
+    cardBody.innerHTML = card;
 
-//     cardBody.innerHTML = card;
+  } catch (err) {
+    console.log(err);
+  }
+};
 
-dice.addEventListener('click', () =>{loadJSON("https://api.adviceslip.com/advice")});
-loadJSON("https://api.adviceslip.com/advice");
-async function loadJSON(fname) {
-  var response = await fetch(fname);
-  var adviceJSON = await response.json();
+loader();
 
-  const id = adviceJSON.slip.id;
-  const advice = adviceJSON.slip.advice;
-  const card = `<div class="card-body">
- <h5>Advice #<span id="advice-id">${id}</span></h5>
- <p class="advice" id="advice"><q>${advice}</q></p>
- <div class="divider"><img src="images/pattern-divider-desktop.svg" alt="divider Image" /></div>
-</div>`;
-
-  cardBody.innerHTML = card;
-}
+dice.addEventListener('click', () =>loader());
