@@ -4,9 +4,9 @@ const dice = document.getElementById("dice");
 
 const loader = async () => {
   try {
-    const res = await fetch("https://api.adviceslip.com/advice");
+    const res = await fetch("https://api.adviceslip.com/advice", {cache: "no-store"});
     if (!res.ok) {
-      throw new Error(`${res.status}: ${await res.text()}`);
+      throw new Error(res.statusText);
     }
     const data = await res.json();
     const card = `<div class="card-body">
